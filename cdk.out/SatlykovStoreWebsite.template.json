@@ -1,0 +1,657 @@
+{
+ "Resources": {
+  "SatlykovStoreWebsiteSatlykovOAIE6DEB65B": {
+   "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+   "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": {
+     "Comment": "Allows CloudFront to reach the bucket"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/SatlykovStoreWebsite/Satlykov-OAI/Resource"
+   }
+  },
+  "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "satlykov-shop-app",
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:cr-owned:d39787c2",
+      "Value": "true"
+     }
+    ],
+    "WebsiteConfiguration": {
+     "IndexDocument": "index.html"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/SatlykovStoreWebsite/SatlykovStaticBucket/Resource"
+   }
+  },
+  "SatlykovStoreWebsiteSatlykovStaticBucketPolicy02D39F18": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "S3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "SatlykovStoreWebsiteSatlykovOAIE6DEB65B",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "s3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "SatlykovStoreWebsiteSatlykovOAIE6DEB65B",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/SatlykovStoreWebsite/SatlykovStaticBucket/Policy/Resource"
+   }
+  },
+  "SatlykovStoreWebsiteSatlykovdistributionCFDistribution716F5C97": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "DefaultCacheBehavior": {
+      "AllowedMethods": [
+       "GET",
+       "HEAD"
+      ],
+      "CachedMethods": [
+       "GET",
+       "HEAD"
+      ],
+      "Compress": true,
+      "ForwardedValues": {
+       "Cookies": {
+        "Forward": "none"
+       },
+       "QueryString": false
+      },
+      "TargetOriginId": "origin1",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "ConnectionAttempts": 3,
+       "ConnectionTimeout": 10,
+       "DomainName": {
+        "Fn::GetAtt": [
+         "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "origin1",
+       "S3OriginConfig": {
+        "OriginAccessIdentity": {
+         "Fn::Join": [
+          "",
+          [
+           "origin-access-identity/cloudfront/",
+           {
+            "Ref": "SatlykovStoreWebsiteSatlykovOAIE6DEB65B"
+           }
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "CloudFrontDefaultCertificate": true
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/SatlykovStoreWebsite/Satlykov-distribution/CFDistribution"
+   }
+  },
+  "SatlykovStoreWebsiteSatlykovBucketDeploymentAwsCliLayerCF1F536E": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "Content": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "3322b7049fb0ed2b7cbb644a2ada8d1116ff80c32dca89e6ada846b5de26f961.zip"
+    },
+    "Description": "/opt/awscli/aws"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/SatlykovStoreWebsite/Satlykov-Bucket-Deployment/AwsCliLayer/Resource",
+    "aws:asset:path": "asset.3322b7049fb0ed2b7cbb644a2ada8d1116ff80c32dca89e6ada846b5de26f961.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "SatlykovStoreWebsiteSatlykovBucketDeploymentCustomResource59798562": {
+   "Type": "Custom::CDKBucketDeployment",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536",
+      "Arn"
+     ]
+    },
+    "SourceBucketNames": [
+     {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     }
+    ],
+    "SourceObjectKeys": [
+     "194c07ff95c347004f9a526449037abd14ff0592005d4d1846ceb6047168ec25.zip"
+    ],
+    "DestinationBucketName": {
+     "Ref": "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2"
+    },
+    "Prune": true,
+    "DistributionId": {
+     "Ref": "SatlykovStoreWebsiteSatlykovdistributionCFDistribution716F5C97"
+    },
+    "DistributionPaths": [
+     "/*"
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/SatlykovStoreWebsite/Satlykov-Bucket-Deployment/CustomResource/Default"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::",
+           {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::",
+           {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SatlykovStoreWebsiteSatlykovStaticBucket6E4955A2",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudfront:GetInvalidation",
+        "cloudfront:CreateInvalidation"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+    "Roles": [
+     {
+      "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "2d56e153cac88d3e0c2f842e8e6f6783b8725bf91f95e0673b4725448a56e96d.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+     }
+    },
+    "Handler": "index.handler",
+    "Layers": [
+     {
+      "Ref": "SatlykovStoreWebsiteSatlykovBucketDeploymentAwsCliLayerCF1F536E"
+     }
+    ],
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+    "aws:asset:path": "asset.2d56e153cac88d3e0c2f842e8e6f6783b8725bf91f95e0673b4725448a56e96d",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21OTWvDMAz9Lb273trusGvrUhgMNlrYjsGxlaDWsYdlLwST/z4ct2kPO70PPUlvzVcvG75ayJ6WSl+WBmueTkGqC5M9VUkZF3XjnQ08fXhs0W6VAqI3DTZgGJhorMiZQ878n5jH31DvkYLHOgZ0Nu8+6pHRhqddVBcIeXZlBT6dQTXc7asuYicJ8naVNPwYN3RgAy+j/WwwSQSB+DbDyIzsai15Eo19lwP4L/CUS53QtgaCs4do1VRzJqKZzZGh7Hg6OgPZnvBesbDx9qQy+UEle1IG+bYnYXD6yaYupyBbtC0TkYLrjkAuelXO3vijKZzVWDpYp4Gf6el39crXz3y9OBPi0kcbsAN+LPgHf2E8oOMBAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SatlykovStoreWebsite/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-2"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
