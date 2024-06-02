@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const static_site_1 = require("./static-site");
+const aws_cdk_lib_1 = require("aws-cdk-lib");
+class MyStaticSiteStack extends aws_cdk_lib_1.Stack {
+    constructor(parent, name) {
+        super(parent, name);
+        new static_site_1.StaticSite(this, 'SatlykovStoreWebsite');
+    }
+}
+const app = new aws_cdk_lib_1.App();
+new MyStaticSiteStack(app, 'SatlykovStoreWebsite');
+app.synth();
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7QUFDQSwrQ0FBMkM7QUFDM0MsNkNBQXlDO0FBRXpDLE1BQU0saUJBQWtCLFNBQVEsbUJBQUs7SUFDbkMsWUFBWSxNQUFXLEVBQUUsSUFBWTtRQUNuQyxLQUFLLENBQUMsTUFBTSxFQUFFLElBQUksQ0FBQyxDQUFDO1FBRXBCLElBQUksd0JBQVUsQ0FBQyxJQUFJLEVBQUUsc0JBQXNCLENBQUMsQ0FBQztJQUMvQyxDQUFDO0NBQ0Y7QUFFRCxNQUFNLEdBQUcsR0FBRyxJQUFJLGlCQUFHLEVBQUUsQ0FBQztBQUV0QixJQUFJLGlCQUFpQixDQUFDLEdBQUcsRUFBRSxzQkFBc0IsQ0FBQyxDQUFDO0FBRW5ELEdBQUcsQ0FBQyxLQUFLLEVBQUUsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIiMhL3Vzci9iaW4vZW52IG5vZGVcbmltcG9ydCB7IFN0YXRpY1NpdGUgfSBmcm9tICcuL3N0YXRpYy1zaXRlJztcbmltcG9ydCB7IEFwcCwgU3RhY2sgfSBmcm9tIFwiYXdzLWNkay1saWJcIjtcblxuY2xhc3MgTXlTdGF0aWNTaXRlU3RhY2sgZXh0ZW5kcyBTdGFjayB7XG4gIGNvbnN0cnVjdG9yKHBhcmVudDogQXBwLCBuYW1lOiBzdHJpbmcpIHtcbiAgICBzdXBlcihwYXJlbnQsIG5hbWUpO1xuXG4gICAgbmV3IFN0YXRpY1NpdGUodGhpcywgJ1NhdGx5a292U3RvcmVXZWJzaXRlJyk7XG4gIH1cbn1cblxuY29uc3QgYXBwID0gbmV3IEFwcCgpO1xuXG5uZXcgTXlTdGF0aWNTaXRlU3RhY2soYXBwLCAnU2F0bHlrb3ZTdG9yZVdlYnNpdGUnKTtcblxuYXBwLnN5bnRoKCk7XG4iXX0=
